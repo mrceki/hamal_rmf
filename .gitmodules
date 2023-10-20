@@ -1,0 +1,6 @@
+[submodule "cyclonedds"]
+	path = cyclonedds
+	url = https://github.com/eclipse-cyclonedds/cyclonedds
+[submodule "free_fleet"]
+	path = free_fleet
+	url = https://github.com/open-rmf/free_fleet
