@@ -25,13 +25,28 @@ find_package(catkin QUIET COMPONENTS
   tf2_geometry_msgs
   actionlib
   move_base_msgs
+  message_generation
+  std_msgs
+)
+add_service_files(
+  DIRECTORY srv
+  FILES DockingBt.srv
 )
 
-if (catkin_FOUND)
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
-  find_package("free_fleet" REQUIRED)
+if (catkin_FOUND) 
 
-  catkin_package()
+  find_package(free_fleet REQUIRED)
+  find_package(bt_amr REQUIRED)
+
+  catkin_package(
+  CATKIN_DEPENDS std_msgs 
+  LIBRARIES bt_amr
+  )
 
   #=============================================================================
 
@@ -40,6 +55,21 @@ if (catkin_FOUND)
     src/utilities.cpp
     src/ClientNode.cpp
     src/ClientNodeConfig.cpp
+  )
+
+  add_executable(hamal_docking_service
+    src/docking_bt_service.cpp
+  )
+  
+  target_link_libraries(hamal_docking_service
+  ${catkin_LIBRARIES}
+  ${bt_amr_LIBRARIES}
+  )
+  target_include_directories(hamal_docking_service
+  PRIVATE
+    ${free_fleet_INCLUDE_DIRS}
+    ${catkin_INCLUDE_DIRS}
+    ${bt_amr_INCLUDE_DIRS}
   )
   target_link_libraries(hamal_ff_client
     ${free_fleet_LIBRARIES}
