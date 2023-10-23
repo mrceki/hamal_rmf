@@ -1,6 +1,6 @@
 <launch>
   
-  <node name="fake_docking_server" pkg="free_fleet_client_ros1" 
+  <node name="fake_docking_server" pkg="hamal_ff_client" 
       type="fake_docking_server"/>
   
   <!-- <node pkg="tf" type="static_transform_publisher" 
