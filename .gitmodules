@@ -1,6 +1,0 @@
-[submodule "rmf_visualization"]
-	path = rmf_visualization
-	url = https://github.com/open-rmf/rmf_visualization.git
-[submodule "rmf_demos"]
-	path = rmf_demos
-	url = https://github.com/open-rmf/rmf_demos.git
