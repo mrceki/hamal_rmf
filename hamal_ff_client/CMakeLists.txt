@@ -38,10 +38,14 @@ generate_messages(
   std_msgs
 )
 
+option(BUILD_DOCKING_SERVICE "Build hamal_docking_service and link with bt_amr library" ON)
+
 if (catkin_FOUND) 
 
   find_package(free_fleet REQUIRED)
-  find_package(bt_amr REQUIRED)
+  if(BUILD_DOCKING_SERVICE)
+    find_package(bt_amr REQUIRED)
+  endif()
 
   catkin_package(
   CATKIN_DEPENDS std_msgs 
@@ -57,20 +61,22 @@ if (catkin_FOUND)
     src/ClientNodeConfig.cpp
   )
 
-  add_executable(hamal_docking_service
-    src/docking_bt_service.cpp
-  )
-  
-  target_link_libraries(hamal_docking_service
-  ${catkin_LIBRARIES}
-  ${bt_amr_LIBRARIES}
-  )
-  target_include_directories(hamal_docking_service
-  PRIVATE
-    ${free_fleet_INCLUDE_DIRS}
-    ${catkin_INCLUDE_DIRS}
-    ${bt_amr_INCLUDE_DIRS}
-  )
+  if(BUILD_DOCKING_SERVICE)
+    add_executable(hamal_docking_service
+      src/docking_bt_service.cpp
+    )
+    target_link_libraries(hamal_docking_service
+      ${catkin_LIBRARIES}
+      ${bt_amr_LIBRARIES}
+    )
+    target_include_directories(hamal_docking_service
+      PRIVATE
+        ${free_fleet_INCLUDE_DIRS}
+        ${catkin_INCLUDE_DIRS}
+        ${bt_amr_INCLUDE_DIRS}
+    )
+  endif()
+
   target_link_libraries(hamal_ff_client
     ${free_fleet_LIBRARIES}
     ${catkin_LIBRARIES}

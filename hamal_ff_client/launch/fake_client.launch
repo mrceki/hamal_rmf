@@ -1,4 +1,5 @@
 <launch>
+  <param name="/use_sim_time" value="false"/>
   
   <node name="fake_docking_server" pkg="hamal_ff_client" 
       type="fake_docking_server"/>
@@ -14,6 +15,7 @@
     <param name="/use_sim_time" value="true"/>
     <param name="fleet_name" type="string" value="free_fleet"/>
     <param name="robot_name" type="string" value="moobot"/>
+    <!-- <param name="robot_frame" type="string" value="base_link"/> -->
     <param name="dds_domain" type="int" value="42"/>
     <param name="level_name" type="str" value="L1"/>
     <param name="battery_state_topic" type="str" value="/battery_state"/>
@@ -22,3 +24,4 @@
   </node>
   
 </launch>
+  
