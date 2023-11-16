@@ -1,15 +1,6 @@
-[submodule "rmf_ros2"]
-	path = rmf_ros2
-	url = https://github.com/open-rmf/rmf_ros2.git
 [submodule "rmf_visualization"]
 	path = rmf_visualization
 	url = https://github.com/open-rmf/rmf_visualization.git
-[submodule "rmf_traffic_editor"]
-	path = rmf_traffic_editor
-	url = https://github.com/open-rmf/rmf_traffic_editor.git
 [submodule "rmf_demos"]
 	path = rmf_demos
 	url = https://github.com/open-rmf/rmf_demos.git
-[submodule "rmf-web"]
-	path = rmf-web
-	url = https://github.com/open-rmf/rmf-web.git
