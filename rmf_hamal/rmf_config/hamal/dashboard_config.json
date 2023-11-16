@@ -1,0 +1,54 @@
+{
+  "world_name" : "Hamal World",  
+  "valid_task": ["Delivery", "Loop"],
+  "task": {
+    "Delivery": {
+      "option": {
+        "dolly_1": {
+          "pickup_place_name": "pickup_point_1",
+          "pickup_dispenser": "dolly_dispenser_1",
+          "dropoff_place_name": "dropoff_point_1",
+          "dropoff_ingestor": "dolly_ingestor_1"
+        },
+        "dolly_2": {
+          "pickup_place_name": "pickup_point_2",
+          "pickup_dispenser": "dolly_dispenser_2",
+          "dropoff_place_name": "dropoff_point_1",
+          "dropoff_ingestor": "dolly_ingestor_1"
+        },
+        "dolly_3": {
+          "pickup_place_name": "pickup_point_3",
+          "pickup_dispenser": "dolly_dispenser_3",
+          "dropoff_place_name": "dropoff_point_2",
+          "dropoff_ingestor": "dolly_ingestor_2"
+        },
+        "dolly_4": {
+          "pickup_place_name": "pickup_point_4",
+          "pickup_dispenser": "dolly_dispenser_4",
+          "dropoff_place_name": "dropoff_point_2",
+          "dropoff_ingestor": "dolly_ingestor_2"
+        }
+      }
+    },
+    "Loop": {
+      "places": [
+        "hamal",
+        "charging_station",
+        "dropoff_point_1",
+        "dropoff_point_2",
+        "pickup_point_1",
+        "pickup_point_2",
+        "pickup_point_3",
+        "pickup_point_4"
+      ]
+    },
+    "Clean": {
+    },
+    "Station": {
+    },
+    "Patrol": {
+    },
+    "Charging": {
+    }
+  }
+}
