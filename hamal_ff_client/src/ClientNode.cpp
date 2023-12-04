@@ -29,6 +29,9 @@ ClientNode::SharedPtr ClientNode::make(const ClientNodeConfig& _config)
   SharedPtr client_node = SharedPtr(new ClientNode(_config));
   client_node->node.reset(new ros::NodeHandle(_config.robot_name + "_node"));
 
+  // Initialize the docking_request_pub publisher
+  client_node->docking_request_pub = client_node->node->advertise<std_msgs::String>("docking_request", 10);
+
   /// Starting the free fleet client
   ClientConfig client_config = _config.get_client_config();
   Client::SharedPtr client = Client::make(client_config);
@@ -69,7 +72,8 @@ ClientNode::SharedPtr ClientNode::make(const ClientNodeConfig& _config)
   client_node->start(Fields{
       std::move(client),
       std::move(move_base_client),
-      std::move(docking_trigger_client)
+      std::move(docking_trigger_client),
+      client_node->docking_request_pub
   });
 
   return client_node;
@@ -128,6 +132,13 @@ void ClientNode::battery_state_callback_fn(
 {
   WriteLock battery_state_lock(battery_state_mutex);
   current_battery_state = _msg;
+}
+
+void ClientNode::publish_docking_request(const std::string& data)
+{
+  std_msgs::String docking_info;
+  docking_info.data = data;
+  docking_request_pub.publish(docking_info);
 }
 
 bool ClientNode::get_robot_transform()
@@ -310,12 +321,27 @@ bool ClientNode::read_mode_request()
       if (fields.docking_trigger_client &&
         fields.docking_trigger_client->isValid())
       {
-        std_srvs::Trigger trigger_srv;
-        fields.docking_trigger_client->call(trigger_srv);
-        if (!trigger_srv.response.success)
+        if (!mode_request.parameters.empty())
         {
-          ROS_ERROR("Failed to trigger docking sequence, message: %s.",
-            trigger_srv.response.message.c_str());
+          std::string parameter_value = mode_request.parameters[0].value;
+          ROS_INFO("Docking place: %s", parameter_value.c_str());
+
+          publish_docking_request(parameter_value.c_str());
+    
+          std_srvs::Trigger trigger_srv;
+          fields.docking_trigger_client->call(trigger_srv);
+    
+          if (!trigger_srv.response.success)
+          {
+            ROS_ERROR("Failed to trigger docking sequence, message: %s.",
+              trigger_srv.response.message.c_str());
+            request_error = true;
+            return false;
+          }
+        }
+        else
+        {
+          ROS_ERROR("No parameters provided for docking mode.");
           request_error = true;
           return false;
         }

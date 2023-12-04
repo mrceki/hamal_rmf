@@ -29,6 +29,7 @@
 #include <std_msgs/String.h>
 #include <std_srvs/Trigger.h>
 #include <sensor_msgs/BatteryState.h>
+#include <std_msgs/String.h>
 #include <tf2_ros/transform_listener.h>
 #include <geometry_msgs/TransformStamped.h>
 
@@ -73,6 +74,8 @@ public:
 
     /// Docking server client
     std::unique_ptr<ros::ServiceClient> docking_trigger_client;
+
+    ros::Publisher docking_request_pub; 
   };
 
   void print_config();
@@ -111,6 +114,8 @@ private:
   geometry_msgs::TransformStamped current_robot_transform;
 
   geometry_msgs::TransformStamped previous_robot_transform;
+  
+  ros::Publisher docking_request_pub;
 
   bool get_robot_transform();
 
@@ -172,6 +177,7 @@ private:
 
   void publish_robot_state();
 
+  void publish_docking_request(const std::string& data);
   // --------------------------------------------------------------------------
   // Threads and thread functions
 
