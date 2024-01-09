@@ -1,14 +1,50 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.5)
 project(rmf_hamal)
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rmf_task_msgs REQUIRED)
+find_package(rmf_dispenser_msgs REQUIRED)
+find_package(rmf_ingestor_msgs REQUIRED)
 find_package(gazebo_ros REQUIRED)
 # find_package(rmf_building_map_tools REQUIRED)
+
+# Include directories
+include_directories(include)
+
+# Add executable
+add_executable(hamal_task_dispatcher src/hamal_task_dispatcher.cpp)
+
+# Link the executable with the necessary libraries
+ament_target_dependencies(hamal_task_dispatcher
+  rclcpp
+  rmf_task_msgs
+  rmf_dispenser_msgs
+  rmf_ingestor_msgs
+)
+
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+)
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION share/${PROJECT_NAME}/
+)
+# Install executable
+install(TARGETS
+  hamal_task_dispatcher
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  rmf_config
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -21,8 +57,9 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_package()
+ament_export_dependencies(ament_cmake rclcpp rmf_task_msgs rmf_dispenser_msgs rmf_ingestor_msgs)
 
+ament_package()
 
 message(NOTICE "Starting Compilation...")
 
@@ -96,8 +133,3 @@ foreach(path ${traffic_editor_paths})
 
 endforeach()
 
-install(DIRECTORY
-  rmf_config
-  launch
-  DESTINATION share/${PROJECT_NAME}
-)
