@@ -12,15 +12,16 @@ hamal_led_controller::Led m_led_status;
 int taskMode;
 float max_linear_vel = 1.0;
 float max_angular_vel = 1.0;
-bool buffer = true;
+bool emg_buffer = true;
+bool lifter_buffer = false;
 
-void batteryCallback(const sensor_msgs::BatteryState::ConstPtr& msg)
-{
-    if (msg->power_supply_status == sensor_msgs::BatteryState::POWER_SUPPLY_STATUS_CHARGING % m_led_status.mode != 2)
-    {
-        m_led_status.mode = 7;
-    }
-}
+// void batteryCallback(const sensor_msgs::BatteryState::ConstPtr& msg)
+// {
+//     if (msg->power_supply_status == sensor_msgs::BatteryState::POWER_SUPPLY_STATUS_CHARGING % m_led_status.mode != 2)
+//     {
+//         m_led_status.mode = 7;
+//     }
+// }
 
 void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg)
 {   
@@ -70,15 +71,29 @@ void dockingCallback(const actionlib_msgs::GoalStatusArray::ConstPtr& msg){
 
 void hardwareStatusCallback(const hamal_custom_interfaces::HardwareStatus::ConstPtr& msg)
 {
-    if (msg->ec_system_status == 0)
-    {
+    if (msg->slave_info.hardware_info_array[0].current_vel != 0 && msg->ec_system_status == 1){
+        m_led_status.mode = 1;
+        led_pub.publish(m_led_status);
+        lifter_buffer = true;  
+    }
+
+    if (lifter_buffer && msg->ec_system_status == 1){
+        if (msg->slave_info.hardware_info_array[0].current_vel == 0){
+            m_led_status.mode = 0;
+            led_pub.publish(m_led_status);
+            lifter_buffer = false;  
+        }
+    }
+
+    if (msg->ec_system_status == 0){
         m_led_status.mode = 2;
         led_pub.publish(m_led_status);
-        buffer = true;
+        emg_buffer = true; 
     }
-    if(buffer == true){
-        if(msg->ec_system_status == 1){
-            buffer = false;
+
+    if (emg_buffer){
+        if (msg->ec_system_status == 1){
+            emg_buffer = false;
             m_led_status.mode = 0;
             led_pub.publish(m_led_status);
         }
@@ -91,8 +106,8 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
 
     led_pub = nh.advertise<hamal_led_controller::Led>("led_status", 10);
-    ros::Subscriber cmd_vel_sub = nh.subscribe("/hamal/mobile_base_controller/cmd_vel", 10, cmdVelCallback);
-    ros::Subscriber battery_sub = nh.subscribe("/battery_state", 10, batteryCallback);
+    ros::Subscriber cmd_vel_sub = nh.subscribe("/cmd_vel", 10, cmdVelCallback);
+    // ros::Subscriber battery_sub = nh.subscribe("/battery_state", 10, batteryCallback);
     ros::Subscriber autodock_status_sub = nh.subscribe("autodock_action/status", 10, dockingCallback);
     ros::Subscriber hardware_status_sub = nh.subscribe("/hamal/hardware_status", 10, hardwareStatusCallback); // Subscribe to the hardware status topic
 

@@ -16,7 +16,7 @@ include(GNUInstallDirs)
 
 #===============================================================================
 
-find_package(catkin QUIET COMPONENTS
+find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_srvs
   sensor_msgs
@@ -27,7 +27,9 @@ find_package(catkin QUIET COMPONENTS
   move_base_msgs
   message_generation
   std_msgs
+  bt_amr  # Include bt_amr in the find_package call
 )
+
 add_service_files(
   DIRECTORY srv
   FILES DockingBt.srv
@@ -48,8 +50,8 @@ if (catkin_FOUND)
   endif()
 
   catkin_package(
-  CATKIN_DEPENDS std_msgs 
-  LIBRARIES bt_amr
+    CATKIN_DEPENDS std_msgs 
+    LIBRARIES bt_amr
   )
 
   #=============================================================================
@@ -80,11 +82,13 @@ if (catkin_FOUND)
   target_link_libraries(hamal_ff_client
     ${free_fleet_LIBRARIES}
     ${catkin_LIBRARIES}
+    ${bt_amr_LIBRARIES}  # Link bt_amr library
   )
   target_include_directories(hamal_ff_client
     PRIVATE
       ${free_fleet_INCLUDE_DIRS}
       ${catkin_INCLUDE_DIRS}
+      ${bt_amr_INCLUDE_DIRS}  # Include bt_amr headers
   )
 
   #=============================================================================
