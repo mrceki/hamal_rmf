@@ -61,7 +61,7 @@ ament_export_dependencies(ament_cmake rclcpp rmf_task_msgs rmf_dispenser_msgs rm
 
 ament_package()
 
-message(NOTICE "Starting Compilation...")
+message(NOTICE "Starting Compilation...") 
 
 file(GLOB_RECURSE traffic_editor_paths "rmf_config/*.building.yaml")
 

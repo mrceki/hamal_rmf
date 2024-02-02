@@ -30,11 +30,12 @@ rmf_fleet:
     loop: True
     delivery: True
     clean: False
-    finishing_request: park #"nothing" # [park, charge, nothing]
+  actions: ["teleop"]
+  finishing_request: [park, charge] #"nothing" # [park, charge, nothing]
   robots:
     # Here the user is expected to append the configuration for each robot in the fleet.
-      moobot:
-        charger: "charging_station"
+    moobot:
+      charger: "charging_station"
 
 fleet_manager:
   ip: "127.0.0.1"

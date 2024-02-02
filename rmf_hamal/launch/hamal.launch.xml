@@ -5,9 +5,16 @@
   <arg name="failover_mode" default="false"/>
   <arg name="use_tpe" default="false"/>
   <arg name="gazebo_version" default='11'/>
+  <arg name="sim" default="false"/>
 
   <!-- Common launch -->
-  <include file="$(find-pkg-share rmf_hamal)/launch/hamal_rmf.launch.xml">
+  <include file="$(find-pkg-share rmf_hamal)/launch/sim_hamal_rmf.launch.xml" if="$(var sim)">
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+    <arg name="failover_mode" value="$(var failover_mode)"/>
+    <arg name="use_tpe" value="$(var use_tpe)"/>
+  </include>
+
+  <include file="$(find-pkg-share rmf_hamal)/launch/hamal_rmf.launch.xml" unless="$(var sim)">
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
     <arg name="failover_mode" value="$(var failover_mode)"/>
     <arg name="use_tpe" value="$(var use_tpe)"/>
