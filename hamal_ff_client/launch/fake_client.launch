@@ -1,7 +1,7 @@
 <launch>
   <param name="/use_sim_time" value="false"/>
   
-  <node name="fake_docking_server" pkg="hamal_ff_client" 
+  <node name="fake_docking_server" pkg="hamal_ff_client"   
       type="fake_docking_server"/>
   
   <!-- <node pkg="tf" type="static_transform_publisher" 
@@ -16,7 +16,7 @@
     <param name="fleet_name" type="string" value="free_fleet"/>
     <param name="robot_name" type="string" value="moobot"/>
     <!-- <param name="robot_frame" type="string" value="base_link"/> -->
-    <param name="dds_domain" type="int" value="42"/>
+    <param name="dds_domain" type="int" value="41"/>
     <param name="level_name" type="str" value="L1"/>
     <param name="battery_state_topic" type="str" value="/battery_state"/>
     <param name="max_dist_to_first_waypoint" type="double" value="10.0"/>

@@ -20,7 +20,7 @@
     <param name="level_name" type="str" value="L1"/>
     <param name="battery_state_topic" type="str" value="/battery_state"/>
     <param name="max_dist_to_first_waypoint" type="double" value="10.0"/>
-    <param name="docking_trigger_server_name" type="string" value="/bt_lifter_server"/>
+    <param name="docking_trigger_server_name" type="string" value="/fake_docking_server"/>
   </node>
   
 </launch>
