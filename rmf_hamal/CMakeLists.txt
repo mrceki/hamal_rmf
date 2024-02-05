@@ -10,6 +10,7 @@ find_package(rclcpp REQUIRED)
 find_package(rmf_task_msgs REQUIRED)
 find_package(rmf_dispenser_msgs REQUIRED)
 find_package(rmf_ingestor_msgs REQUIRED)
+find_package(rmf_fleet_msgs REQUIRED)
 find_package(gazebo_ros REQUIRED)
 # find_package(rmf_building_map_tools REQUIRED)
 
@@ -25,6 +26,7 @@ ament_target_dependencies(hamal_task_dispatcher
   rmf_task_msgs
   rmf_dispenser_msgs
   rmf_ingestor_msgs
+  rmf_fleet_msgs
 )
 
 include_directories(
