@@ -322,6 +322,51 @@ bool ClientNode::read_mode_request()
       }
     }
 
+    else if (mode_request.mode.mode == 10)
+    {
+      ROS_INFO("received a PICKUP command.");
+      if (fields.docking_trigger_client &&
+        fields.docking_trigger_client->isValid())
+      {
+        std_srvs::Trigger trigger_srv;
+        fields.docking_trigger_client->call(trigger_srv);
+        if (trigger_srv.response.success)
+        {
+          ROS_INFO("Pickup sequence triggered successfully.");
+          return true;
+        }
+        else
+        {
+          ROS_ERROR("Failed to trigger pickup sequence, message: %s.",
+            trigger_srv.response.message.c_str());
+          request_error = true;
+          return false;
+        }
+      }
+    }
+    else if (mode_request.mode.mode == 11)
+    {
+      ROS_INFO("received a DROPOFF command.");
+      if (fields.docking_trigger_client &&
+        fields.docking_trigger_client->isValid())
+      {
+        std_srvs::Trigger trigger_srv;
+        fields.docking_trigger_client->call(trigger_srv);
+        if (trigger_srv.response.success)
+        {
+          ROS_INFO("Dropoff sequence triggered successfully.");
+          return true;
+        }
+        else
+        {
+          ROS_ERROR("Failed to trigger dropoff sequence, message: %s.",
+            trigger_srv.response.message.c_str());
+          request_error = true;
+          return false;
+        }
+      }
+    }
+
     WriteLock task_id_lock(task_id_mutex);
     current_task_id = mode_request.task_id;
 
