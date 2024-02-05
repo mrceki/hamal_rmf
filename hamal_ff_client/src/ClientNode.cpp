@@ -310,27 +310,12 @@ bool ClientNode::read_mode_request()
       if (fields.docking_trigger_client &&
         fields.docking_trigger_client->isValid())
       {
-        if (!mode_request.parameters.empty())
+        std_srvs::Trigger trigger_srv;
+        fields.docking_trigger_client->call(trigger_srv);
+        if (!trigger_srv.response.success)
         {
-          std::string parameter_value = mode_request.parameters[0].value;
-          ROS_INFO("Docking place: %s", parameter_value.c_str());
-
-          publish_docking_request(parameter_value.c_str());
-    
-          std_srvs::Trigger trigger_srv;
-          fields.docking_trigger_client->call(trigger_srv);
-          ros::Duration(20.0).sleep();
-          if (!trigger_srv.response.success)
-          {
-            ROS_ERROR("Failed to trigger docking sequence, message: %s.",
-              trigger_srv.response.message.c_str());
-            request_error = true;
-            return false;
-          }
-        }
-        else
-        {
-          ROS_ERROR("No parameters provided for docking mode.");
+          ROS_ERROR("Failed to trigger docking sequence, message: %s.",
+            trigger_srv.response.message.c_str());
           request_error = true;
           return false;
         }
@@ -497,7 +482,6 @@ void ClientNode::handle_requests()
       {
         ros::Duration wait_time_remaining =
             goal_path.front().goal_end_time - ros::Time::now();
-        ROS_INFO("ROS_TIME_NOW= %.1f", ros::Time::now());
         ROS_INFO(
             "we reached our goal early! Waiting %.1f more seconds",
             wait_time_remaining.toSec());
