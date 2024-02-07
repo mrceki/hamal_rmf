@@ -26,7 +26,6 @@ HamalTaskDispatcherNode::HamalTaskDispatcherNode() : Node("hamal_task_dispatcher
     fleet_states_sub_ = create_subscription<rmf_fleet_msgs::msg::FleetState>(
         "/fleet_states", 10,
         std::bind(&HamalTaskDispatcherNode::fleet_states_callback, this, std::placeholders::_1));
-
 }
 
 
@@ -42,7 +41,7 @@ void HamalTaskDispatcherNode::fleet_states_callback(const rmf_fleet_msgs::msg::F
 {
     for (const auto& robot : msg->robots)
     {
-        if (robot_modes_[robot.name] == 10 && robot.mode.mode == 0)
+        if (robot_modes_[robot.name] == MODE_PICKUP && robot.mode.mode == 0)
         {
             auto it = robot_task_id_.find(robot.name);
             RCLCPP_WARN(get_logger(), "Task %s found for robot %s", it->second.c_str(), robot.name.c_str());
@@ -54,7 +53,7 @@ void HamalTaskDispatcherNode::fleet_states_callback(const rmf_fleet_msgs::msg::F
             dispenser_result_pub_->publish(*dispenser_result_msg);
             RCLCPP_INFO(get_logger(), "Robot %s completed dispenser task", robot.name.c_str());
         }
-        if (robot_modes_[robot.name] == 11 && robot.mode.mode == 0)
+        if (robot_modes_[robot.name] == MODE_DROPOFF && robot.mode.mode == 0)
         {
             auto it = robot_task_id_.find(robot.name);
             auto ingestor_result_msg = std::make_shared<rmf_ingestor_msgs::msg::IngestorResult>();
@@ -67,76 +66,47 @@ void HamalTaskDispatcherNode::fleet_states_callback(const rmf_fleet_msgs::msg::F
         robot_modes_[robot.name] = robot.mode.mode;
     }
 }
+
 void HamalTaskDispatcherNode::dispenser_request_callback(const rmf_dispenser_msgs::msg::DispenserRequest::SharedPtr msg)
 {
     RCLCPP_INFO(get_logger(), "Received dispenser request for task_id: %s", msg->request_guid.c_str());
-    auto task_id = msg->request_guid;
-    auto it = bid_responses_.find(task_id);
-    
-    if (robot_modes_[it->second.robot_name] == 10 || robot_modes_[it->second.robot_name] == 11)
-    {
-        RCLCPP_ERROR(get_logger(), "Robot %s is already busy with a task", it->second.robot_name.c_str());
-        return;
-    }
-    else if (it != bid_responses_.end())
-    {
-        RCLCPP_INFO(get_logger(), "Found bid response for task_id: %s", task_id.c_str());
-        it->second.task_type = "pickup";
-        auto mode_request_msg = std::make_shared<rmf_fleet_msgs::msg::ModeRequest>();
-        mode_request_msg->fleet_name = it->second.fleet_name;
-        mode_request_msg->robot_name = it->second.robot_name;
-        mode_request_msg->mode.mode = 10; // 10 for pickup
-        mode_request_msg->task_id = task_id;
-        if (mode_request_msg->parameters.empty()) {
-            rmf_fleet_msgs::msg::ModeParameter parameter;
-            mode_request_msg->parameters.push_back(parameter);
-        }
-        mode_request_msg->parameters[0].name = "pickup";
-        mode_request_msg->parameters[0].value = msg->target_guid;
-        mode_request_pub_->publish(*mode_request_msg);
-
-        RCLCPP_INFO(get_logger(), "Published dispenser request for task_id: %s", task_id.c_str());
-    }
-    else
-    {
-        RCLCPP_ERROR(get_logger(), "No bid response found for task_id: %s", task_id.c_str());
-    }
+    publish_mode_request(msg->request_guid, msg->target_guid, MODE_PICKUP);
 }
 
 void HamalTaskDispatcherNode::ingestor_request_callback(const rmf_ingestor_msgs::msg::IngestorRequest::SharedPtr msg)
 {
-    auto task_id = msg->request_guid;
+    RCLCPP_INFO(get_logger(), "Received ingestor request for task_id: %s", msg->request_guid.c_str());
+    publish_mode_request(msg->request_guid, msg->target_guid, MODE_DROPOFF);
+}
 
+void HamalTaskDispatcherNode::publish_mode_request(const std::string& task_id, const std::string& target_guid, uint32_t mode)
+{
     auto it = bid_responses_.find(task_id);
-    RCLCPP_INFO(get_logger(), "Found bid response for task_idx: %s", task_id.c_str());
-    if (robot_modes_[it->second.robot_name] == 10 || robot_modes_[it->second.robot_name] == 11)
+    if (it == bid_responses_.end())
+    {
+        RCLCPP_ERROR(get_logger(), "No bid response found for task_id: %s", task_id.c_str());
+        return;
+    }
+    if (robot_modes_[it->second.robot_name] == MODE_PICKUP || robot_modes_[it->second.robot_name]== MODE_DROPOFF)
     {
         RCLCPP_ERROR(get_logger(), "Robot %s is already busy with a task", it->second.robot_name.c_str());
         return;
-    }
-    else if (it != bid_responses_.end())
-    {
-        it->second.task_type = "ingestor";
+    } 
 
-        auto mode_request_msg = std::make_shared<rmf_fleet_msgs::msg::ModeRequest>();
-        mode_request_msg->fleet_name = it->second.fleet_name;
-        mode_request_msg->robot_name = it->second.robot_name;
-        mode_request_msg->mode.mode = 11; // 11 for dropoff
-        mode_request_msg->task_id = task_id;
-        if (mode_request_msg->parameters.empty()) {
-            rmf_fleet_msgs::msg::ModeParameter parameter;
-            mode_request_msg->parameters.push_back(parameter);
-        }
-        mode_request_msg->parameters[0].name = "dropoff";
-        mode_request_msg->parameters[0].value = msg->target_guid;
-        mode_request_pub_->publish(*mode_request_msg);
+    auto mode_request_msg = std::make_shared<rmf_fleet_msgs::msg::ModeRequest>();
+    mode_request_msg->fleet_name = it->second.fleet_name;
+    mode_request_msg->robot_name = it->second.robot_name;
+    mode_request_msg->mode.mode = mode;
+    mode_request_msg->task_id = task_id;
+    if (mode_request_msg->parameters.empty()) {
+        rmf_fleet_msgs::msg::ModeParameter parameter;
+        mode_request_msg->parameters.push_back(parameter);
+    }
+    mode_request_msg->parameters[0].name = (mode == MODE_PICKUP) ? "pickup" : "dropoff";
+    mode_request_msg->parameters[0].value = target_guid;
+    mode_request_pub_->publish(*mode_request_msg);
 
-        RCLCPP_INFO(get_logger(), "Published ingestor request for task_id: %s", task_id.c_str());
-    }
-    else
-    {
-        RCLCPP_ERROR(get_logger(), "No bid response found for task_id: %s", task_id.c_str());
-    }
+    RCLCPP_INFO(get_logger(), "Published request for task_id: %s", task_id.c_str()); 
 }
 
 int main(int argc, char *argv[])

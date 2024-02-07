@@ -11,6 +11,9 @@
 #include "rmf_ingestor_msgs/msg/ingestor_result.hpp"
 #include "rmf_fleet_msgs/msg/fleet_state.hpp"
 
+const uint32_t MODE_PICKUP = 10;
+const uint32_t MODE_DROPOFF = 11;
+
 class HamalTaskDispatcherNode : public rclcpp::Node
 {
 public:
@@ -21,6 +24,7 @@ private:
   void dispenser_request_callback(const rmf_dispenser_msgs::msg::DispenserRequest::SharedPtr msg);
   void ingestor_request_callback(const rmf_ingestor_msgs::msg::IngestorRequest::SharedPtr msg);
   void fleet_states_callback(const rmf_fleet_msgs::msg::FleetState::SharedPtr msg);
+  void publish_mode_request(const std::string& task_id, const std::string& target_guid, uint32_t mode);
 
   struct task_allocation
   {
