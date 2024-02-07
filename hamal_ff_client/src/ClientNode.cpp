@@ -177,6 +177,10 @@ messages::RobotMode ClientNode::get_robot_mode()
       return messages::RobotMode{messages::RobotMode::MODE_MOVING};
   }
   
+  /// Checks if robot is docking
+  if (docking)
+    return messages::RobotMode{messages::RobotMode::MODE_DOCKING};
+
   /// Otherwise, robot is neither charging nor moving,
   /// Checks if the robot is paused
   if (paused)
@@ -316,6 +320,7 @@ bool ClientNode::read_mode_request()
         fields.docking_trigger_client->isValid())
       {
         std_srvs::Trigger trigger_srv;
+        docking = true;
         fields.docking_trigger_client->call(trigger_srv);
         if (!trigger_srv.response.success)
         {
@@ -324,6 +329,10 @@ bool ClientNode::read_mode_request()
           request_error = true;
           return false;
         }
+        ROS_INFO("Waiting 10 seconds for fake docking sequence to complete...");
+        ros::Duration(10.0).sleep();
+        docking = false;
+        ROS_INFO("Docking sequence completed.");
       }
     }
     // TODO: Add server for PICKUP and DROPOFF commands
