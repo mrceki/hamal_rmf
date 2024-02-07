@@ -182,6 +182,11 @@ messages::RobotMode ClientNode::get_robot_mode()
   if (paused)
     return messages::RobotMode{messages::RobotMode::MODE_PAUSED};
 
+  if (pickup)
+    return messages::RobotMode{10};
+
+  if (dropoff)
+    return messages::RobotMode{11};
   /// Otherwise, robot has queued tasks, it is paused or waiting,
   /// default to use pausing for now
   return messages::RobotMode{messages::RobotMode::MODE_IDLE};
@@ -321,7 +326,61 @@ bool ClientNode::read_mode_request()
         }
       }
     }
-
+    // TODO: Add server for PICKUP and DROPOFF commands
+    else if (mode_request.mode.mode == 10)
+    {
+      ROS_INFO("received a PICKUP command.");
+      if (fields.docking_trigger_client &&
+        fields.docking_trigger_client->isValid())
+      {
+        std_srvs::Trigger trigger_srv;
+        fields.docking_trigger_client->call(trigger_srv);
+        if (trigger_srv.response.success)
+        {
+          ROS_INFO("Pickup sequence triggered successfully.");
+          pickup = true;
+        }
+        else
+        {
+          ROS_ERROR("Failed to trigger pickup sequence, message: %s.",
+            trigger_srv.response.message.c_str());
+          request_error = true;
+          return false;
+        }
+      ROS_INFO("Waiting for 10 seconds...");
+      ros::Duration(10.0).sleep();
+      pickup = false;
+      ROS_INFO("Pickup sequence completed.");
+      return true;
+      }
+    }
+    else if (mode_request.mode.mode == 11)
+    {
+      ROS_INFO("received a DROPOFF command.");
+      if (fields.docking_trigger_client &&
+        fields.docking_trigger_client->isValid())
+      {
+        std_srvs::Trigger trigger_srv;
+        fields.docking_trigger_client->call(trigger_srv);
+        if (trigger_srv.response.success)
+        {
+          dropoff = true;
+          ROS_INFO("Dropoff sequence triggered successfully.");
+        }
+        else
+        {
+          ROS_ERROR("Failed to trigger dropoff sequence, message: %s.",
+          trigger_srv.response.message.c_str());
+          request_error = true;
+          return false;
+        }
+      }
+      ROS_INFO("Waiting for 10 seconds...");
+      ros::Duration(10.0).sleep();
+      dropoff = false;
+      ROS_INFO("Dropoff sequence completed.");
+      return true;
+    }
     WriteLock task_id_lock(task_id_mutex);
     current_task_id = mode_request.task_id;
 

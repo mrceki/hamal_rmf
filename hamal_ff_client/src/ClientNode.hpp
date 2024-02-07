@@ -128,6 +128,8 @@ private:
   std::atomic<bool> request_error;
   std::atomic<bool> emergency;
   std::atomic<bool> paused;
+  std::atomic<bool> pickup;
+  std::atomic<bool> dropoff;
 
   messages::RobotMode get_robot_mode();
 
