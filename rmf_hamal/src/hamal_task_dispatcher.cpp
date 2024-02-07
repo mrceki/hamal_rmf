@@ -57,6 +57,7 @@ void HamalTaskDispatcherNode::fleet_states_callback(const rmf_fleet_msgs::msg::F
         {
             auto it = robot_task_id_.find(robot.name);
             auto ingestor_result_msg = std::make_shared<rmf_ingestor_msgs::msg::IngestorResult>();
+            ingestor_result_msg->time = now();
             ingestor_result_msg->source_guid = robot.name;
             ingestor_result_msg->request_guid = it->second; // Set the task ID here
             ingestor_result_msg->status = rmf_ingestor_msgs::msg::IngestorResult::SUCCESS; // Set the status here
