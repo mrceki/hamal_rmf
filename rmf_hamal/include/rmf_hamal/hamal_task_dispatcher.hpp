@@ -7,6 +7,10 @@
 #include "rmf_fleet_msgs/msg/mode_request.hpp"
 #include "rmf_dispenser_msgs/msg/dispenser_request.hpp"
 #include "rmf_ingestor_msgs/msg/ingestor_request.hpp"
+#include "rmf_dispenser_msgs/msg/dispenser_result.hpp"
+#include "rmf_ingestor_msgs/msg/ingestor_result.hpp"
+#include "rmf_fleet_msgs/msg/fleet_state.hpp"
+
 class HamalTaskDispatcherNode : public rclcpp::Node
 {
 public:
@@ -16,6 +20,7 @@ private:
   void bid_response_callback(const rmf_task_msgs::msg::BidResponse::SharedPtr msg);
   void dispenser_request_callback(const rmf_dispenser_msgs::msg::DispenserRequest::SharedPtr msg);
   void ingestor_request_callback(const rmf_ingestor_msgs::msg::IngestorRequest::SharedPtr msg);
+  void fleet_states_callback(const rmf_fleet_msgs::msg::FleetState::SharedPtr msg);
 
   struct task_allocation
   {
@@ -25,11 +30,15 @@ private:
   };
 
   std::unordered_map<std::string, task_allocation> bid_responses_;
+  std::unordered_map<std::string, std::uint32_t> robot_modes_;
+  std::unordered_map<std::string, std::string> robot_task_id_;
 
   rclcpp::Subscription<rmf_task_msgs::msg::BidResponse>::SharedPtr bid_response_sub_;
   rclcpp::Subscription<rmf_dispenser_msgs::msg::DispenserRequest>::SharedPtr dispenser_request_sub_;
   rclcpp::Subscription<rmf_ingestor_msgs::msg::IngestorRequest>::SharedPtr ingestor_request_sub_;
-
+  rclcpp::Publisher<rmf_dispenser_msgs::msg::DispenserResult>::SharedPtr dispenser_result_pub_;
+  rclcpp::Publisher<rmf_ingestor_msgs::msg::IngestorResult>::SharedPtr ingestor_result_pub_;
+  rclcpp::Subscription<rmf_fleet_msgs::msg::FleetState>::SharedPtr fleet_states_sub_;
   rclcpp::Publisher<rmf_fleet_msgs::msg::ModeRequest>::SharedPtr mode_request_pub_;
 };
 

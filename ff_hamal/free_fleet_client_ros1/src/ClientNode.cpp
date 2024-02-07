@@ -182,6 +182,12 @@ messages::RobotMode ClientNode::get_robot_mode()
   if (paused)
     return messages::RobotMode{messages::RobotMode::MODE_PAUSED};
 
+  if (pickup)
+    return messages::RobotMode{10};
+
+  if (dropoff)
+    return messages::RobotMode{11};
+
   /// Otherwise, robot has queued tasks, it is paused or waiting,
   /// default to use pausing for now
   return messages::RobotMode{messages::RobotMode::MODE_IDLE};
@@ -333,7 +339,7 @@ bool ClientNode::read_mode_request()
         if (trigger_srv.response.success)
         {
           ROS_INFO("Pickup sequence triggered successfully.");
-          return true;
+          pickup = true;
         }
         else
         {
@@ -342,6 +348,11 @@ bool ClientNode::read_mode_request()
           request_error = true;
           return false;
         }
+      ROS_INFO("Waiting for 10 seconds...");
+      ros::Duration(10.0).sleep();
+      pickup = false;
+      ROS_INFO("Pickup sequence completed.");
+      return true;
       }
     }
     else if (mode_request.mode.mode == 11)
@@ -354,8 +365,8 @@ bool ClientNode::read_mode_request()
         fields.docking_trigger_client->call(trigger_srv);
         if (trigger_srv.response.success)
         {
+          dropoff = true;
           ROS_INFO("Dropoff sequence triggered successfully.");
-          return true;
         }
         else
         {
@@ -365,6 +376,11 @@ bool ClientNode::read_mode_request()
           return false;
         }
       }
+      ROS_INFO("Waiting for 10 seconds...");
+      ros::Duration(10.0).sleep();
+      dropoff = false;
+      ROS_INFO("Dropoff sequence completed.");
+      return true;
     }
 
     WriteLock task_id_lock(task_id_mutex);
