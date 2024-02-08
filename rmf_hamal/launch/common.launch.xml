@@ -39,18 +39,18 @@
   </group>
 
   <!-- Door Supervisor -->
-  <group>
+  <!-- <group>
     <node pkg="rmf_fleet_adapter" exec="door_supervisor">
       <param name="use_sim_time" value="$(var use_sim_time)"/>
     </node>
-  </group>
+  </group> -->
 
   <!-- Lift Supervisor -->
-  <group>
+  <!-- <group>
     <node pkg="rmf_fleet_adapter" exec="lift_supervisor">
       <param name="use_sim_time" value="$(var use_sim_time)"/>
     </node>
-  </group>
+  </group> -->
 
   <!-- Dispatcher Node -->
   <group>
@@ -60,11 +60,11 @@
     </node>
   </group>
 
-  <group if="$(var use_rmf_panel)">
+  <!-- <group if="$(var use_rmf_panel)">
     <include file="$(find-pkg-share rmf_hamal)/launch/dashboard.launch.xml">
       <arg name="use_sim_time" value="$(var use_sim_time)"/>
       <arg name="dashboard_config_file" value ="$(var dashboard_config_file)"/>
     </include>
-  </group>
+  </group> -->
 
 </launch>
