@@ -30,11 +30,25 @@ HamalTaskDispatcherNode::HamalTaskDispatcherNode() : Node("hamal_task_dispatcher
 
 
 void HamalTaskDispatcherNode::bid_response_callback(const rmf_task_msgs::msg::BidResponse::SharedPtr msg)
-{
-    bid_responses_[msg->task_id].robot_name = msg->proposal.expected_robot_name;
-    bid_responses_[msg->task_id].fleet_name = msg->proposal.fleet_name;
-    robot_task_id_[msg->proposal.expected_robot_name] = msg->task_id;
-    RCLCPP_INFO(get_logger(), "Received bid response for robot %s, task_id: %s", msg->proposal.expected_robot_name.c_str(), msg->task_id.c_str());
+{   
+    auto robot_name = msg->proposal.expected_robot_name;
+    auto fleet_name= msg->proposal.fleet_name;
+    auto task_id = msg->task_id;
+
+    for (auto it = bid_responses_.begin(); it != bid_responses_.end(); it++)
+    {
+        if (it->second.robot_name == robot_name)
+        {
+            RCLCPP_INFO(get_logger(), "Erasing bid response for robot %s", it->second.robot_name.c_str());
+            bid_responses_.erase(it);
+            break;
+        }
+    }
+
+    bid_responses_[task_id].robot_name = robot_name;
+    bid_responses_[task_id].fleet_name = fleet_name;
+    robot_task_id_[robot_name] = task_id;
+    RCLCPP_INFO(get_logger(), "Received bid response for robot %s, task_id: %s", robot_name.c_str(), msg->task_id.c_str());
 }
 
 void HamalTaskDispatcherNode::fleet_states_callback(const rmf_fleet_msgs::msg::FleetState::SharedPtr msg)
