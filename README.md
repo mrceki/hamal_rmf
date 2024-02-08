@@ -1,5 +1,5 @@
 # Hamal RMF
-# RMF Visualization Project
+# Fleet Management
 
 This project involves several repositories. Follow the instructions below to clone and build the project.
 
@@ -13,6 +13,7 @@ pip3 install python-socketio==5.7.2
 ### Cloning the Repositories
 Clone the following repositories:
 ```
+git clone https://github.com/mrceki/hamal_rmf.git
 git clone https://github.com/mrceki/rmf_visualization.git
 git clone https://github.com/mrceki/rmf-web.git
 git clone https://github.com/mrceki/rmf_traffic_editor.git
@@ -46,6 +47,7 @@ ros2 launch ff_examples_ros2 fake_server.launch.xml
 ```
 ## To start the web server, navigate to the dashboard directory and start the server:
 ```
+pnpm install
 cd /rmf_demos_ws/src/rmf_web/packages/dashboard
 pnpm start
 ```
