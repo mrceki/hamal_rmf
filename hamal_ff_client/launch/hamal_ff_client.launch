@@ -3,6 +3,9 @@
   
   <node name="fake_docking_server" pkg="hamal_ff_client" 
       type="fake_docking_server"/>
+    
+  <node name="fake_lifter_server" pkg="hamal_ff_client" 
+      type="fake_lifter_server"/>
   
   <!-- <node pkg="tf" type="static_transform_publisher" 
       name="fake_robot_transform" 
@@ -21,6 +24,7 @@
     <param name="battery_state_topic" type="str" value="/battery_state"/>
     <param name="max_dist_to_first_waypoint" type="double" value="10.0"/>
     <param name="docking_trigger_server_name" type="string" value="/fake_docking_server"/>
+    <param name="lifter_server_name" type"string" value="/fake_lifter_server"/>
   </node>
   
 </launch>

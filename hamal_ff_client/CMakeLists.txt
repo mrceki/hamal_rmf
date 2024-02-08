@@ -96,6 +96,7 @@ if (catkin_FOUND)
   set(testing_targets
     fake_action_server
     fake_docking_server
+    fake_lifter_server
   )
   
   foreach(target ${testing_targets})
