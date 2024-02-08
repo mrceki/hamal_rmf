@@ -10,6 +10,10 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>gazebo_ros</depend>
+  <depend>rmf_task_msgs</depend>
+  <depend>rmf_dispenser_msgs</depend>
+  <depend>rmf_ingestor_msgs</depend>
+  <depend>rmf_fleet_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
