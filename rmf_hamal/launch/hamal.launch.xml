@@ -9,7 +9,7 @@
   
   <arg name="config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/config.yaml"/>
   <arg name="nav_graph_file" default="$(find-pkg-share rmf_hamal)/maps/hamal_warehouse/nav_graphs/0.yaml"/>
-  <arg name="dashboard_config_file" value="$(find-pkg-share rmf_hamal)/rmf_config/hamal/dashboard_config.json"/>
+  <arg name="dashboard_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/hamal/dashboard_config.json"/>
 
   <!-- Common launch -->
   <include file="$(find-pkg-share rmf_hamal)/launch/sim_hamal_rmf.launch.xml" if="$(var sim)">
