@@ -5,6 +5,10 @@
   <arg name="control_type" default="full_control"/>
   <arg name="fleet_name" default="free_fleet" description="Name of this fleet of moobot robots"/>
 
+  <arg name="config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/config.yaml"/>
+  <arg name="nav_graph_file" default="$(find-pkg-share rmf_hamal)/maps/hamal_warehouse/nav_graphs/0.yaml"/>
+  <arg name="dashboard_config_file" value="$(find-pkg-share rmf_hamal)/rmf_config/hamal/dashboard_config.json"/>
+  
   <!-- Common launch -->
   <include file="$(find-pkg-share rmf_hamal)/launch/common.launch.xml">
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
@@ -21,7 +25,7 @@
       <!-- <arg name="use_sim_time" value="$(var use_sim_time)"/> -->
       <!-- <arg name="nav_graph_file" value="$(find-pkg-share rmf_hamal)/maps/hamal_warehouse/nav_graphs/0.yaml" /-->
       <!-- arg name="config_file" value="$(find-pkg-share rmf_hamal)/rmf_config/config.yaml"/> -->
-      
+
        <!-- The name and control type of the fleet -->
       <arg name="fleet_name" value="$(var fleet_name)"/>
       <arg name="control_type" value="$(var control_type)"/>
