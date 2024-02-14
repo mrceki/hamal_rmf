@@ -6,32 +6,34 @@
   <arg name="use_tpe" default="false"/>
   <arg name="gazebo_version" default='11'/>
   <arg name="sim" default="false"/>
+  
+  <arg name="config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/config.yaml"/>
+  <arg name="nav_graph_file" default="$(find-pkg-share rmf_hamal)/maps/hamal_warehouse/nav_graphs/0.yaml"/>
+  <arg name="dashboard_config_file" value="$(find-pkg-share rmf_hamal)/rmf_config/hamal/dashboard_config.json"/>
 
   <!-- Common launch -->
   <include file="$(find-pkg-share rmf_hamal)/launch/sim_hamal_rmf.launch.xml" if="$(var sim)">
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
     <arg name="failover_mode" value="$(var failover_mode)"/>
     <arg name="use_tpe" value="$(var use_tpe)"/>
+    <arg name="config_file" value="$(var config_file)"/>
+    <arg name="nav_graph_file" value="$(var nav_graph_file)"/>
+    <arg name="dashboard_config_file" value="$(var dashboard_config_file)"/>
   </include>
 
   <include file="$(find-pkg-share rmf_hamal)/launch/hamal_rmf.launch.xml" unless="$(var sim)">
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
     <arg name="failover_mode" value="$(var failover_mode)"/>
     <arg name="use_tpe" value="$(var use_tpe)"/>
+    <arg name="config_file" value="$(var config_file)"/>
+    <arg name="nav_graph_file" value="$(var nav_graph_file)"/>
+    <arg name="dashboard_config_file" value="$(var dashboard_config_file)"/>
   </include>
 
   <!-- Simulation launch -->
-  <include file="$(find-pkg-share ff_examples_ros2)/launch/sim_ff_server.launch.xml" if="$(var sim)">
-  </include>
+  <include file="$(find-pkg-share ff_examples_ros2)/launch/sim_ff_server.launch.xml" if="$(var sim)"/>
 
   <!-- Fake client launch -->
-  <include file="$(find-pkg-share ff_examples_ros2)/launch/hamal_ff_server.launch.xml" unless="$(var sim)">
-  </include>
-
-  <!-- Simulation launch -->
-  <!-- <include file="$(find-pkg-share rmf_hamal)/launch/start_my_world.launch.xml">
-    <arg name="map_name" value="hamal" />
-    <arg name="gazebo_version" value="$(var gazebo_version)" />
-  </include> -->
+  <include file="$(find-pkg-share ff_examples_ros2)/launch/hamal_ff_server.launch.xml" unless="$(var sim)"/>
 
 </launch>
