@@ -9,6 +9,7 @@
   
   <arg name="config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/config.yaml"/>
   <arg name="nav_graph_file" default="$(find-pkg-share rmf_hamal)/maps/hamal_warehouse/nav_graphs/0.yaml"/>
+  <arg name="building_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/hamal_warehouse.building.yaml"/>
   <arg name="dashboard_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/hamal/dashboard_config.json"/>
 
   <!-- Common launch -->
@@ -18,6 +19,7 @@
     <arg name="use_tpe" value="$(var use_tpe)"/>
     <arg name="config_file" value="$(var config_file)"/>
     <arg name="nav_graph_file" value="$(var nav_graph_file)"/>
+    <arg name="building_config_file" value="$(var building_config_file)"/>
     <arg name="dashboard_config_file" value="$(var dashboard_config_file)"/>
   </include>
 
@@ -27,6 +29,7 @@
     <arg name="use_tpe" value="$(var use_tpe)"/>
     <arg name="config_file" value="$(var config_file)"/>
     <arg name="nav_graph_file" value="$(var nav_graph_file)"/>
+    <arg name="building_config_file" value="$(var building_config_file)"/>
     <arg name="dashboard_config_file" value="$(var dashboard_config_file)"/>
   </include>
 
