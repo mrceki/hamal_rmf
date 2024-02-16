@@ -41,6 +41,7 @@
 #include <free_fleet/messages/Location.hpp>
 
 #include "ClientNodeConfig.hpp"
+#include <hamal_custom_interfaces/LifterOperationAction.h>
 
 namespace free_fleet
 {
@@ -74,6 +75,7 @@ public:
 
     /// Docking server client
     std::unique_ptr<ros::ServiceClient> docking_trigger_client;
+    std::unique_ptr<actionlib::SimpleActionClient<hamal_custom_interfaces::LifterOperationAction>> lifter_client;
 
     ros::Publisher docking_request_pub; 
   };
@@ -181,6 +183,10 @@ private:
   void publish_robot_state();
 
   void publish_docking_request(const std::string& data);
+  
+  bool perform_lifter_operation(
+          actionlib::SimpleActionClient<hamal_custom_interfaces::LifterOperationAction>& lifter_client, 
+          double target_value, const std::string& operation_type);
   // --------------------------------------------------------------------------
   // Threads and thread functions
 
