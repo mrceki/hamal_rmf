@@ -27,7 +27,8 @@ find_package(catkin REQUIRED COMPONENTS
   move_base_msgs
   message_generation
   std_msgs
-  bt_amr  # Include bt_amr in the find_package call
+  bt_amr
+  hamal_custom_interfaces
 )
 
 add_service_files(
@@ -82,13 +83,13 @@ if (catkin_FOUND)
   target_link_libraries(hamal_ff_client
     ${free_fleet_LIBRARIES}
     ${catkin_LIBRARIES}
-    ${bt_amr_LIBRARIES}  # Link bt_amr library
+    ${bt_amr_LIBRARIES}  
   )
   target_include_directories(hamal_ff_client
     PRIVATE
       ${free_fleet_INCLUDE_DIRS}
       ${catkin_INCLUDE_DIRS}
-      ${bt_amr_INCLUDE_DIRS}  # Include bt_amr headers
+      ${bt_amr_INCLUDE_DIRS}  
   )
 
   #=============================================================================
@@ -97,6 +98,7 @@ if (catkin_FOUND)
     fake_action_server
     fake_docking_server
     fake_lifter_server
+    fake_lifter_action_server
   )
   
   foreach(target ${testing_targets})

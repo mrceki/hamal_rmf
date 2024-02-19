@@ -66,10 +66,27 @@ ClientNode::SharedPtr ClientNode::make(const ClientNodeConfig& _config)
     }
   }
 
+  /// Setting up the lifter action server client, if required, wait for server
+  std::unique_ptr<actionlib::SimpleActionClient<hamal_custom_interfaces::LifterOperationAction>> lifter_client = nullptr;
+  if (_config.lifter_server_name != "")
+  {
+    lifter_client =
+      std::make_unique<actionlib::SimpleActionClient<hamal_custom_interfaces::LifterOperationAction>>(
+        _config.lifter_server_name, true); 
+    if (!lifter_client->waitForServer(
+      ros::Duration(_config.wait_timeout)))
+    {
+      ROS_ERROR("timed out waiting for lifter server: %s",
+        _config.lifter_server_name.c_str());
+      return nullptr;
+    }
+  }
+  
   client_node->start(Fields{
       std::move(client),
       std::move(move_base_client),
-      std::move(docking_trigger_client)
+      std::move(docking_trigger_client),
+      std::move(lifter_client)
   });
 
   return client_node;
@@ -339,55 +356,52 @@ bool ClientNode::read_mode_request()
     else if (mode_request.mode.mode == 10)
     {
       ROS_INFO("received a PICKUP command.");
-      if (fields.docking_trigger_client &&
-        fields.docking_trigger_client->isValid())
+      if (fields.lifter_client &&
+        fields.lifter_client->isServerConnected())
       {
-        std_srvs::Trigger trigger_srv;
-        fields.docking_trigger_client->call(trigger_srv);
-        if (trigger_srv.response.success)
-        {
-          ROS_INFO("Pickup sequence triggered successfully.");
-          pickup = true;
+        pickup = true;
+        double target_value_pickup = 260.0;
+        bool success_pickup = perform_lifter_operation(*fields.lifter_client, target_value_pickup, "PICKUP");
+        if (success_pickup) {
+          ROS_INFO("PICKUP sequence completed");
+          pickup = false;
+          return true;
+        } else {
+            ROS_ERROR("Failed to perform PICKUP sequence.");
+            request_error = true;
+            return false;
         }
-        else
-        {
-          ROS_ERROR("Failed to trigger pickup sequence, message: %s.",
-            trigger_srv.response.message.c_str());
-          request_error = true;
-          return false;
-        }
-      ROS_INFO("Waiting for 10 seconds...");
-      ros::Duration(10.0).sleep();
-      pickup = false;
-      ROS_INFO("Pickup sequence completed.");
       return true;
       }
     }
     else if (mode_request.mode.mode == 11)
     {
       ROS_INFO("received a DROPOFF command.");
-      if (fields.docking_trigger_client &&
-        fields.docking_trigger_client->isValid())
-      {
-        std_srvs::Trigger trigger_srv;
-        fields.docking_trigger_client->call(trigger_srv);
-        if (trigger_srv.response.success)
-        {
-          dropoff = true;
-          ROS_INFO("Dropoff sequence triggered successfully.");
-        }
-        else
-        {
-          ROS_ERROR("Failed to trigger dropoff sequence, message: %s.",
-          trigger_srv.response.message.c_str());
-          request_error = true;
-          return false;
-        }
-      }
-      ROS_INFO("Waiting for 10 seconds...");
-      ros::Duration(10.0).sleep();
+      if (fields.lifter_client && fields.lifter_client->isServerConnected())
+       {
+           dropoff = true;
+           double target_value_dropoff = 0.0;
+           bool success_dropoff = perform_lifter_operation(*fields.lifter_client, target_value_dropoff, "DROPOFF");
+           if (success_dropoff) {
+               ROS_INFO("DROPOFF sequence completed");
+               dropoff = false;
+               return true;
+           } else {
+               ROS_ERROR("Failed to perform DROPOFF sequence.");
+               request_error = true;
+               return false;
+           }
+       }
+       else
+       {
+           ROS_ERROR("Lifter client is not available or not connected.");
+           request_error = true;
+           return false;
+       }
+      // ROS_INFO("Waiting for 10 seconds...");
+      // ros::Duration(10.0).sleep();
       dropoff = false;
-      ROS_INFO("Dropoff sequence completed.");
+      // ROS_INFO("Dropoff sequence completed.");
       return true;
     }
     WriteLock task_id_lock(task_id_mutex);
@@ -397,6 +411,25 @@ bool ClientNode::read_mode_request()
     return true;
   }
   return false;
+}
+
+bool ClientNode::perform_lifter_operation(actionlib::SimpleActionClient<hamal_custom_interfaces::LifterOperationAction>& lifter_client, double target_value, const std::string& operation_type){
+  ROS_INFO("Sending %s command with target position: %f", operation_type.c_str(), target_value);
+  hamal_custom_interfaces::LifterOperationGoal goal;
+  goal.target_position = target_value;
+
+  lifter_client.sendGoal(goal);
+
+  bool finished_before_timeout = lifter_client.waitForResult(ros::Duration(60.0));
+  
+  if (finished_before_timeout){
+    actionlib::SimpleClientGoalState state = lifter_client.getState();
+    return true;
+  } 
+  else {
+    ROS_ERROR("Failed to complete %s sequence", operation_type.c_str());
+    return false;
+  }
 }
 
 bool ClientNode::read_path_request()

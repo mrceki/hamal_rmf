@@ -1,0 +1,12 @@
+#goal
+float64 target_position
+float64 profile_time
+
+---
+#result
+bool target_reached
+string status_str
+---
+#feedback
+float64 current_position
+float64 target_command

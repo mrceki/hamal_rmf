@@ -4,8 +4,8 @@
   <node name="fake_docking_server" pkg="hamal_ff_client"   
       type="fake_docking_server"/>
 
-  <node name="fake_lifter_server" pkg="hamal_ff_client" 
-      type="fake_lifter_server"/>
+ <node name="fake_lifter_action_server" pkg="hamal_ff_client" 
+      type="fake_lifter_action_server"/>
   
   <!-- <node pkg="tf" type="static_transform_publisher" 
       name="fake_robot_transform" 
