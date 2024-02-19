@@ -380,7 +380,6 @@ bool ClientNode::read_mode_request()
       if (fields.lifter_client && fields.lifter_client->isServerConnected())
        {
            dropoff = true;
-           // Set target_value_dropoff to 0.0
            double target_value_dropoff = 0.0;
            bool success_dropoff = perform_lifter_operation(*fields.lifter_client, target_value_dropoff, "DROPOFF");
            if (success_dropoff) {
