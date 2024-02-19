@@ -18,12 +18,13 @@ public:
         current_position_(0.0)
     {
         as_.start();
+        ROS_INFO("Fake Lifter Action Server started.");
     }
 
     ~FakeLifterActionServer(void) {}
 
     void executeCB(const hamal_custom_interfaces::LifterOperationGoalConstPtr &goal) {
-        ros::Rate loop_rate(1000); 
+        ros::Rate loop_rate(1); 
         float target_position = goal->target_position;
         float profile_time = 5.0; // goal->profile_time
         float increment = (target_position - current_position_) / (profile_time * loop_rate.expectedCycleTime().toSec());
@@ -51,8 +52,8 @@ public:
                 current_position_ = target_position;
                 break;
             }
+            ROS_INFO("Current position: %f", current_position_);
         }
-    
         if (fabs(target_position - current_position_) < 0.01) {
             result_.target_reached = true;
             result_.status_str = "Target position reached.";

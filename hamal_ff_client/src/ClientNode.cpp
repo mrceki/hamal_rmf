@@ -352,7 +352,6 @@ bool ClientNode::read_mode_request()
         ROS_INFO("Docking sequence completed.");
       }
     }
-    // TODO: Add server for PICKUP and DROPOFF commands
     else if (mode_request.mode.mode == 10)
     {
       ROS_INFO("received a PICKUP command.");
@@ -365,12 +364,13 @@ bool ClientNode::read_mode_request()
         if (success_pickup) {
           ROS_INFO("PICKUP sequence completed");
           pickup = false;
-          return true;
         } else {
             ROS_ERROR("Failed to perform PICKUP sequence.");
             request_error = true;
+            pickup = false;
             return false;
         }
+      pickup = false;
       return true;
       }
     }
@@ -379,18 +379,19 @@ bool ClientNode::read_mode_request()
       ROS_INFO("received a DROPOFF command.");
       if (fields.lifter_client && fields.lifter_client->isServerConnected())
        {
-           dropoff = true;
-           double target_value_dropoff = 0.0;
-           bool success_dropoff = perform_lifter_operation(*fields.lifter_client, target_value_dropoff, "DROPOFF");
-           if (success_dropoff) {
-               ROS_INFO("DROPOFF sequence completed");
-               dropoff = false;
-               return true;
-           } else {
-               ROS_ERROR("Failed to perform DROPOFF sequence.");
-               request_error = true;
-               return false;
-           }
+          dropoff = true;
+          double target_value_dropoff = 0.0;
+          bool success_dropoff = perform_lifter_operation(*fields.lifter_client, target_value_dropoff, "DROPOFF");
+          if (success_dropoff) {
+              ROS_INFO("DROPOFF sequence completed");
+              dropoff = false;
+          } else {
+              ROS_ERROR("Failed to perform DROPOFF sequence.");
+              request_error = true;
+              dropoff = false;
+              return false;
+          }
+          dropoff = false;
        }
        else
        {
