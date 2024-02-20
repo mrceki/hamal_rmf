@@ -51,7 +51,7 @@ if (catkin_FOUND)
   endif()
 
   catkin_package(
-    CATKIN_DEPENDS std_msgs 
+    CATKIN_DEPENDS roscpp std_msgs 
     LIBRARIES bt_amr
   )
 
@@ -78,6 +78,8 @@ if (catkin_FOUND)
         ${catkin_INCLUDE_DIRS}
         ${bt_amr_INCLUDE_DIRS}
     )
+    add_dependencies(hamal_docking_service
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
   endif()
 
   target_link_libraries(hamal_ff_client
