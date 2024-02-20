@@ -29,6 +29,7 @@
 #include <std_msgs/String.h>
 #include <std_srvs/Trigger.h>
 #include <sensor_msgs/BatteryState.h>
+#include <std_msgs/String.h>
 #include <tf2_ros/transform_listener.h>
 #include <geometry_msgs/TransformStamped.h>
 
@@ -40,6 +41,7 @@
 #include <free_fleet/messages/Location.hpp>
 
 #include "ClientNodeConfig.hpp"
+#include <hamal_custom_interfaces/LifterOperationAction.h>
 
 namespace free_fleet
 {
@@ -73,6 +75,9 @@ public:
 
     /// Docking server client
     std::unique_ptr<ros::ServiceClient> docking_trigger_client;
+    std::unique_ptr<actionlib::SimpleActionClient<hamal_custom_interfaces::LifterOperationAction>> lifter_client;
+
+    ros::Publisher docking_request_pub; 
   };
 
   void print_config();
@@ -111,6 +116,8 @@ private:
   geometry_msgs::TransformStamped current_robot_transform;
 
   geometry_msgs::TransformStamped previous_robot_transform;
+  
+  ros::Publisher docking_request_pub;
 
   bool get_robot_transform();
 
@@ -123,6 +130,7 @@ private:
   std::atomic<bool> request_error;
   std::atomic<bool> emergency;
   std::atomic<bool> paused;
+  std::atomic<bool> docking;
   std::atomic<bool> pickup;
   std::atomic<bool> dropoff;
 
@@ -174,6 +182,11 @@ private:
 
   void publish_robot_state();
 
+  void publish_docking_request(const std::string& data);
+  
+  bool perform_lifter_operation(
+          actionlib::SimpleActionClient<hamal_custom_interfaces::LifterOperationAction>& lifter_client, 
+          double target_value, const std::string& operation_type);
   // --------------------------------------------------------------------------
   // Threads and thread functions
 

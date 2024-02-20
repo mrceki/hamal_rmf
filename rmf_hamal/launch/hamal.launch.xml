@@ -6,24 +6,55 @@
   <arg name="use_tpe" default="false"/>
   <arg name="gazebo_version" default='11'/>
   <arg name="sim" default="false"/>
+  
+  <arg name="config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/config.yaml"/>
+  <arg name="dashboard_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/hamal/dashboard_config.json"/>
 
-  <!-- Common launch -->
-  <include file="$(find-pkg-share rmf_hamal)/launch/sim_hamal_rmf.launch.xml" if="$(var sim)">
-    <arg name="use_sim_time" value="$(var use_sim_time)"/>
-    <arg name="failover_mode" value="$(var failover_mode)"/>
-    <arg name="use_tpe" value="$(var use_tpe)"/>
-  </include>
+  <arg name="nav_graph_file" default="$(find-pkg-share rmf_hamal)/maps/AYOSB2/nav_graphs/0.yaml"/>
+  <arg name="building_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/AYOSB2.building.yaml"/>
+  <arg name="sim_building_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/hamal_warehouse.building.yaml"/>
+  <arg name="sim_nav_graph_file" default="$(find-pkg-share rmf_hamal)/maps/hamal_warehouse/nav_graphs/0.yaml"/>
 
-  <include file="$(find-pkg-share rmf_hamal)/launch/hamal_rmf.launch.xml" unless="$(var sim)">
-    <arg name="use_sim_time" value="$(var use_sim_time)"/>
-    <arg name="failover_mode" value="$(var failover_mode)"/>
-    <arg name="use_tpe" value="$(var use_tpe)"/>
-  </include>
+  <group unless="$(var sim)">
+    <include file="$(find-pkg-share rmf_hamal)/launch/hamal_rmf.launch.xml">
+      <arg name="use_sim_time" value="$(var use_sim_time)"/>
+      <arg name="failover_mode" value="$(var failover_mode)"/>
+      <arg name="use_tpe" value="$(var use_tpe)"/>
+      <arg name="config_file" value="$(var config_file)"/>
+      <arg name="nav_graph_file" value="$(var nav_graph_file)"/>
+      <arg name="building_config_file" value="$(var building_config_file)"/>
+      <arg name="dashboard_config_file" value="$(var dashboard_config_file)"/>
+    </include>
 
-  <!-- Simulation launch -->
-  <!-- <include file="$(find-pkg-share rmf_hamal)/launch/start_my_world.launch.xml">
-    <arg name="map_name" value="hamal" />
-    <arg name="gazebo_version" value="$(var gazebo_version)" />
-  </include> -->
+    <include file="$(find-pkg-share ff_examples_ros2)/launch/hamal_ff_server.launch.xml">
+      <arg name="dds_domain" value="42"/>
+      <arg name="translation_x" value="-5.5"/>
+      <arg name="translation_y" value="27.50"/>
+      <arg name="rotation" value="-0.013"/>
+      <arg name="scale" value="0.928"/>
+    </include>
+  </group>
 
+  <group if="$(var sim)">
+    <include file="$(find-pkg-share rmf_hamal)/launch/hamal_rmf.launch.xml">
+      <arg name="use_sim_time" value="$(var use_sim_time)"/>
+      <arg name="failover_mode" value="$(var failover_mode)"/>
+      <arg name="use_tpe" value="$(var use_tpe)"/>
+      <arg name="config_file" value="$(var config_file)"/>
+      <arg name="nav_graph_file" value="$(var sim_nav_graph_file)"/>
+      <arg name="building_config_file" value="$(var sim_building_config_file)"/>
+      <arg name="dashboard_config_file" value="$(var dashboard_config_file)"/>
+    </include>
+
+    <include file="$(find-pkg-share ff_examples_ros2)/launch/hamal_ff_server.launch.xml">
+      <arg name="dds_domain" value="41"/>
+      <arg name="translation_x" value="-6.5"/>
+      <arg name="translation_y" value="10.10"/>
+      <arg name="rotation" value="-0.013"/>
+      <arg name="scale" value="0.928"/>
+    </include>
+  </group>
+
+  <!-- Task dispatcher launch -->
+  <node name="hamal_task_dispatcher" pkg="rmf_hamal" exec="hamal_task_dispatcher" output="screen"/>
 </launch>

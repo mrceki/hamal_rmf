@@ -2,27 +2,35 @@
 
 <launch>
   <arg name="use_sim_time" default="true"/>
-  <arg name="control_type" default="easy_fleet_adat"/>
-  <arg name="fleet_name" default="moobot" description="Name of this fleet of moobot robots"/>
+  <arg name="control_type" default="full_control"/>
+  <arg name="fleet_name" default="free_fleet" description="Name of this fleet of moobot robots"/>
+
+  <arg name="config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/config.yaml"/>
+  <arg name="building_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/AYOSB2.building.yaml"/> 
+  <arg name="nav_graph_file" default="$(find-pkg-share rmf_hamal)/maps/AYOSB2/nav_graphs/0.yaml"/>
+  <arg name="dashboard_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/hamal/dashboard_config.json"/>
 
   <!-- Common launch -->
   <include file="$(find-pkg-share rmf_hamal)/launch/common.launch.xml">
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
     <!-- <arg name="viz_config_file" value ="$(find-pkg-share rmf_demos)/include/office/office.rviz"/> -->
-    <arg name="config_file" value="$(find-pkg-share rmf_hamal)/rmf_config/fuar.building.yaml"/>
-    <arg name="dashboard_config_file" value="$(find-pkg-share rmf_hamal)/rmf_config/hamal/dashboard_config.json"/>
+    <arg name="config_file" value="$(var config_file)"/>
+    <arg name="dashboard_config_file" value="$(var dashboard_config_file)"/>
+    <arg name="building_config_file" value="$(var building_config_file)"/>
   </include>
 
   <!-- TinyRobot fleet adapter -->
   <group>
     <include file="$(find-pkg-share rmf_fleet_adapter)/fleet_adapter.launch.xml">
-      <arg name="fleet_name" value="free_fleet"/>
-      <arg name="use_sim_time" value="$(var use_sim_time)"/>
-      <arg name="nav_graph_file" value="$(find-pkg-share rmf_hamal)/maps/fuar/nav_graphs/0.yaml" />
-      <arg name="config_file" value="$(find-pkg-share rmf_hamal)/rmf_config/config.yaml"/>
+
+      <!-- <arg name="fleet_name" value="free_fleet"/> -->
+      <!-- <arg name="use_sim_time" value="$(var use_sim_time)"/> -->
+      <!-- <arg name="nav_graph_file" value="$(find-pkg-share rmf_hamal)/maps/hamal_warehouse/nav_graphs/0.yaml" /-->
+      <arg name="config_file" value="$(var config_file)"/>
+
        <!-- The name and control type of the fleet -->
       <arg name="fleet_name" value="$(var fleet_name)"/>
-      <arg name="control_type" value="full_control"/>
+      <arg name="control_type" value="$(var control_type)"/>
 
       <!-- The graph that this fleet should use for navigation -->
       <arg name="nav_graph_file" value="$(var nav_graph_file)" />
