@@ -7,16 +7,18 @@
   <arg name="gazebo_version" default='11'/>
   <arg name="sim" default="false"/>
   
+  <arg name="fleet_name" default="altinay_fleet"/>
   <arg name="config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/config.yaml"/>
   <arg name="dashboard_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/hamal/dashboard_config.json"/>
 
-  <arg name="nav_graph_file" default="$(find-pkg-share rmf_hamal)/maps/AYOSB2/nav_graphs/0.yaml"/>
-  <arg name="building_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/AYOSB2.building.yaml"/>
+  <arg name="nav_graph_file" default="$(find-pkg-share rmf_hamal)/maps/ayosb3/nav_graphs/0.yaml"/>
+  <arg name="building_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/ayosb3.building.yaml"/>
   <arg name="sim_building_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/hamal_warehouse.building.yaml"/>
   <arg name="sim_nav_graph_file" default="$(find-pkg-share rmf_hamal)/maps/hamal_warehouse/nav_graphs/0.yaml"/>
 
   <group unless="$(var sim)">
     <include file="$(find-pkg-share rmf_hamal)/launch/hamal_rmf.launch.xml">
+      <arg name="fleet_name" value="$(var fleet_name)"/>
       <arg name="use_sim_time" value="$(var use_sim_time)"/>
       <arg name="failover_mode" value="$(var failover_mode)"/>
       <arg name="use_tpe" value="$(var use_tpe)"/>
@@ -27,9 +29,10 @@
     </include>
 
     <include file="$(find-pkg-share ff_examples_ros2)/launch/hamal_ff_server.launch.xml">
+      <arg name="fleet_name" value="$(var fleet_name)"/>
       <arg name="dds_domain" value="42"/>
-      <arg name="translation_x" value="-5.5"/>
-      <arg name="translation_y" value="27.50"/>
+      <arg name="translation_x" value="-4.7"/>
+      <arg name="translation_y" value="7.0"/>
       <arg name="rotation" value="-0.013"/>
       <arg name="scale" value="0.928"/>
     </include>
@@ -47,6 +50,7 @@
     </include>
 
     <include file="$(find-pkg-share ff_examples_ros2)/launch/hamal_ff_server.launch.xml">
+      <arg name="fleet_name" value="$(var fleet_name)"/>
       <arg name="dds_domain" value="41"/>
       <arg name="translation_x" value="-6.5"/>
       <arg name="translation_y" value="10.10"/>
