@@ -1,0 +1,43 @@
+coordinate_system: reference_image
+crowd_sim:
+  agent_groups:
+    - {agents_name: [], agents_number: 0, group_id: 0, profile_selector: external_agent, state_selector: external_static, x: 0, y: 0}
+  agent_profiles:
+    - {ORCA_tau: 1, ORCA_tauObst: 0.40000000000000002, class: 1, max_accel: 0, max_angle_vel: 0, max_neighbors: 10, max_speed: 0, name: external_agent, neighbor_dist: 5, obstacle_set: 1, pref_speed: 0, r: 0.25}
+  enable: 0
+  goal_sets: []
+  model_types: []
+  obstacle_set: {class: 1, file_name: L1_navmesh.nav, type: nav_mesh}
+  states:
+    - {final: 1, goal_set: -1, name: external_static, navmesh_file_name: ""}
+  transitions: []
+  update_time_step: 0.10000000000000001
+graphs:
+  {}
+levels:
+  L1:
+    drawing:
+      filename: ayosb3.png
+    elevation: 0
+    lanes:
+      - [5, 6, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [6, 7, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [7, 8, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+    layers:
+      {}
+    measurements:
+      - [0, 1, {distance: [3, 1.6000000000000001]}]
+      - [2, 1, {distance: [3, 8.5999999999999996]}]
+      - [3, 4, {distance: [3, 10]}]
+    vertices:
+      - [1507.665, 1051.0930000000001, 0, ""]
+      - [1354.52, 1224.6569999999999, 0, ""]
+      - [663.05499999999995, 137.983, 0, ""]
+      - [1356.453, 2271.9580000000001, 0, ""]
+      - [2918.0390000000002, 2271.9580000000001, 0, ""]
+      - [626.58799999999997, 706.83699999999999, 0, A_noktasi, {dropoff_ingestor: [1, dropoff_ingestor_A], is_charger: [4, true], is_parking_spot: [4, true], pickup_dispenser: [1, pickup_dispenser_A]}]
+      - [973.49199999999996, 899.56200000000001, 0, B_noktasi, {dropoff_ingestor: [1, dropoff_ingestor_B], is_parking_spot: [4, true], pickup_dispenser: [1, pickup_dispenser_B]}]
+      - [975.90200000000004, 1265.739, 0, C_noktasi, {dropoff_ingestor: [1, dropoff_ingestor_C], is_parking_spot: [4, true], pickup_dispenser: [1, pickup_dispenser_C]}]
+      - [518.17999999999995, 1260.921, 0, D_noktasi, {dropoff_ingestor: [1, dropoff_ingestor_D], is_parking_spot: [4, true], pickup_dispenser: [1, pickup_dispenser_D]}]
+lifts: {}
+name: ayosb3
