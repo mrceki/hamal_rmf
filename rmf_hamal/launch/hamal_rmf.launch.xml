@@ -3,7 +3,7 @@
 <launch>
   <arg name="use_sim_time" default="true"/>
   <arg name="control_type" default="full_control"/>
-  <arg name="fleet_name" default="free_fleet" description="Name of this fleet of moobot robots"/>
+  <arg name="fleet_name" default="altinay_fleet" description="Name of this fleet of moobot robots"/>
 
   <arg name="config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/config.yaml"/>
   <arg name="building_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/AYOSB2.building.yaml"/> 
@@ -23,7 +23,7 @@
   <group>
     <include file="$(find-pkg-share rmf_fleet_adapter)/fleet_adapter.launch.xml">
 
-      <!-- <arg name="fleet_name" value="free_fleet"/> -->
+      <!-- <arg name="fleet_name" value="altinay_fleet"/> -->
       <!-- <arg name="use_sim_time" value="$(var use_sim_time)"/> -->
       <!-- <arg name="nav_graph_file" value="$(find-pkg-share rmf_hamal)/maps/hamal_warehouse/nav_graphs/0.yaml" /-->
       <arg name="config_file" value="$(var config_file)"/>

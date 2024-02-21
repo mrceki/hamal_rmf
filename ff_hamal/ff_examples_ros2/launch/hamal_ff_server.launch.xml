@@ -3,7 +3,7 @@
 <launch>
 
 
-  <arg name="fleet_name" default="free_fleet"/>
+  <arg name="fleet_name" default="altinay_fleet"/>
   <arg name="fleet_state_topic" default="fleet_states"/>
   <arg name="mode_request_topic" default="robot_mode_requests"/>
   <arg name="path_request_topic" default="robot_path_requests"/>
@@ -15,8 +15,8 @@
   <arg name="update_state_frequency" default="20.0"/>
   <arg name="publish_state_frequency" default="2.0"/>
   <arg name="dds_domain" default="42"/>
-  <arg name="translation_x" default="-5.5"/>
-  <arg name="translation_y" default="27.50"/>
+  <arg name="translation_x" default="-5.6"/>
+  <arg name="translation_y" default="-8.25"/>
   <arg name="rotation" default="-0.013"/>
   <arg name="scale" default="0.928"/>
 

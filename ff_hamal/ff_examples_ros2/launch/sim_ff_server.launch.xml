@@ -3,7 +3,7 @@
 <launch>
 
 
-  <arg name="fleet_name" default="free_fleet"/>
+  <arg name="fleet_name" default="altinay_fleet"/>
   <arg name="fleet_state_topic" default="fleet_states"/>
   <arg name="mode_request_topic" default="robot_mode_requests"/>
   <arg name="path_request_topic" default="robot_path_requests"/>

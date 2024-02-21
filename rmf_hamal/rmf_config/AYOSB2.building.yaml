@@ -43,7 +43,6 @@ levels:
       - [53, 54, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, forward], speed_limit: [3, 0]}]
       - [54, 55, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, backward], speed_limit: [3, 0]}]
       - [44, 56, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
-      - [43, 57, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
     layers:
       {}
     measurements:
@@ -92,9 +91,9 @@ levels:
       - [235.892, 306.721, 0, ""]
       - [162.88800000000001, 435.584, 0, ""]
       - [412.87099999999998, 578.827, 0, ""]
-      - [177.65299999999999, 581.154, 0, test_zone_4, {is_parking_spot: [4, true]}]
-      - [146.95699999999999, 525.28800000000001, 0, test_zone_1, {is_charger: [4, true], is_parking_spot: [4, true]}]
-      - [156.57499999999999, 610.00699999999995, 0, test_zone_3, {is_parking_spot: [4, true]}]
+      - [177.65299999999999, 581.154, 0, B_noktasi, {dropoff_ingestor: [1, dropoff_ingestor_B], is_parking_spot: [4, true], pickup_dispenser: [1, pickup_dispenser_B]}]
+      - [146.95699999999999, 525.28800000000001, 0, A_noktasi, {dropoff_ingestor: [1, dropoff_ingestor_A], is_charger: [4, true], is_parking_spot: [4, true], pickup_dispenser: [1, pickup_dispenser_A]}]
+      - [156.57499999999999, 610.00699999999995, 0, C_noktasi, {dropoff_ingestor: [1, dropoff_ingestor_C], is_parking_spot: [4, true], pickup_dispenser: [1, pickup_dispenser_C]}]
       - [266.75999999999999, 248.535, 0, park_1, {is_charger: [4, true], is_parking_spot: [4, true]}]
       - [374.471, 295.47000000000003, 0, park_2, {is_parking_spot: [4, true]}]
       - [587.82399999999996, 439.38099999999997, 0, ""]
@@ -106,8 +105,7 @@ levels:
       - [392.565, 267.82799999999997, 0, park_3, {is_parking_spot: [4, true]}]
       - [466.84100000000001, 308.48200000000003, 0, park_4, {is_parking_spot: [4, true]}]
       - [531.60199999999998, 344.05500000000001, 0, park_5, {is_parking_spot: [4, true]}]
-      - [154.102, 614.86000000000001, 0, lifter_2, {dock_name: [1, lifter_1], is_parking_spot: [4, true]}]
-      - [144.38399999999999, 520.10000000000002, 0, lifter_1, {dock_name: [1, lifter_1], is_parking_spot: [4, true]}]
+      - [106.496, 580.48800000000006, 0, D_noktasi, {dropoff_ingestor: [1, dropoff_ingestor_D], is_parking_spot: [4, true], pickup_dispenser: [1, pickup_dispenser_D]}]
     walls:
       - [0, 1, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]
       - [1, 2, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]
