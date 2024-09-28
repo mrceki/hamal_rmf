@@ -62,18 +62,10 @@ Client::SharedPtr Client::make(const ClientConfig& _config)
               participant, &FreeFleetData_DestinationRequest_desc,
               _config.dds_destination_request_topic));
 
-  
-  dds::DDSSubscribeHandler<FreeFleetData_TaskRequest>::SharedPtr
-      task_request_sub(
-          new dds::DDSSubscribeHandler<FreeFleetData_TaskRequest>(
-              participant, &FreeFleetData_TaskRequest_desc,
-              _config.dds_task_request_topic));
-
   if (!state_pub->is_ready() ||
       !mode_request_sub->is_ready() ||
       !path_request_sub->is_ready() ||
-      !destination_request_sub->is_ready() || 
-      !task_request_sub->is_ready())
+      !destination_request_sub->is_ready())
     return nullptr;
 
   client->impl->start(ClientImpl::Fields{
@@ -81,8 +73,7 @@ Client::SharedPtr Client::make(const ClientConfig& _config)
       std::move(state_pub),
       std::move(mode_request_sub),
       std::move(path_request_sub),
-      std::move(destination_request_sub),
-      std::move(task_request_sub)});
+      std::move(destination_request_sub)});
   return client;
 }
 
@@ -113,12 +104,6 @@ bool Client::read_destination_request(
     messages::DestinationRequest& _destination_request)
 {
   return impl->read_destination_request(_destination_request);
-}
-
-bool Client::read_task_request(
-    messages::TaskRequest& _task_request)
-{
-  return impl->read_task_request(_task_request);
 }
 
 } // namespace free_fleet
