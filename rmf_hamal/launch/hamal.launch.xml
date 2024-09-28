@@ -6,6 +6,7 @@
   <arg name="use_tpe" default="false"/>
   <arg name="gazebo_version" default='11'/>
   <arg name="sim" default="false"/>
+  <arg name="ff" default="true"/>
   
   <arg name="fleet_name" default="altinay_fleet"/>
   <arg name="config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/config.yaml"/>
@@ -26,16 +27,19 @@
       <arg name="nav_graph_file" value="$(var nav_graph_file)"/>
       <arg name="building_config_file" value="$(var building_config_file)"/>
       <arg name="dashboard_config_file" value="$(var dashboard_config_file)"/>
+      <arg name="ff" value="$(var ff)"/>
     </include>
 
-    <include file="$(find-pkg-share ff_examples_ros2)/launch/hamal_ff_server.launch.xml">
-      <arg name="fleet_name" value="$(var fleet_name)"/>
-      <arg name="dds_domain" value="42"/>
-      <arg name="translation_x" value="-4.7"/>
-      <arg name="translation_y" value="7.0"/>
-      <arg name="rotation" value="-0.013"/>
-      <arg name="scale" value="0.928"/>
-    </include>
+    <group if="$(var ff)">
+      <include file="$(find-pkg-share ff_examples_ros2)/launch/hamal_ff_server.launch.xml">
+        <arg name="fleet_name" value="$(var fleet_name)"/>
+        <arg name="dds_domain" value="42"/>
+        <arg name="translation_x" value="-4.7"/>
+        <arg name="translation_y" value="7.0"/>
+        <arg name="rotation" value="-0.013"/>
+        <arg name="scale" value="0.928"/>
+      </include>
+    </group>
   </group>
 
   <group if="$(var sim)">
@@ -47,16 +51,19 @@
       <arg name="nav_graph_file" value="$(var sim_nav_graph_file)"/>
       <arg name="building_config_file" value="$(var sim_building_config_file)"/>
       <arg name="dashboard_config_file" value="$(var dashboard_config_file)"/>
+      <arg name="ff" value="$(var ff)"/>
     </include>
 
-    <include file="$(find-pkg-share ff_examples_ros2)/launch/hamal_ff_server.launch.xml">
-      <arg name="fleet_name" value="$(var fleet_name)"/>
-      <arg name="dds_domain" value="41"/>
-      <arg name="translation_x" value="-6.5"/>
-      <arg name="translation_y" value="10.10"/>
-      <arg name="rotation" value="-0.013"/>
-      <arg name="scale" value="0.928"/>
-    </include>
+    <group if="$(var ff)">
+      <include file="$(find-pkg-share ff_examples_ros2)/launch/hamal_ff_server.launch.xml">
+        <arg name="fleet_name" value="$(var fleet_name)"/>
+        <arg name="dds_domain" value="41"/>
+        <arg name="translation_x" value="-6.5"/>
+        <arg name="translation_y" value="10.10"/>
+        <arg name="rotation" value="-0.013"/>
+        <arg name="scale" value="0.928"/>
+      </include>
+    </group>
   </group>
 
   <!-- Task dispatcher launch -->

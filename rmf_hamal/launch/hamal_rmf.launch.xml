@@ -9,7 +9,7 @@
   <arg name="building_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/AYOSB2.building.yaml"/> 
   <arg name="nav_graph_file" default="$(find-pkg-share rmf_hamal)/maps/AYOSB2/nav_graphs/0.yaml"/>
   <arg name="dashboard_config_file" default="$(find-pkg-share rmf_hamal)/rmf_config/hamal/dashboard_config.json"/>
-
+  <arg name="ff" default="true"/>
   <!-- Common launch -->
   <include file="$(find-pkg-share rmf_hamal)/launch/common.launch.xml">
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
@@ -20,7 +20,7 @@
   </include>
 
   <!-- TinyRobot fleet adapter -->
-  <group>
+  <group if="$(var ff)">
     <include file="$(find-pkg-share rmf_fleet_adapter)/fleet_adapter.launch.xml">
 
       <!-- <arg name="fleet_name" value="altinay_fleet"/> -->
@@ -90,5 +90,4 @@
       <arg name="recharge_threshold" value="0.10"/>
     </include>
   </group>
-
 </launch>
