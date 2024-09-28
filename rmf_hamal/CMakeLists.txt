@@ -11,7 +11,7 @@ find_package(rmf_task_msgs REQUIRED)
 find_package(rmf_dispenser_msgs REQUIRED)
 find_package(rmf_ingestor_msgs REQUIRED)
 find_package(rmf_fleet_msgs REQUIRED)
-find_package(gazebo_ros REQUIRED)
+# find_package(gazebo_ros REQUIRED)
 # find_package(rmf_building_map_tools REQUIRED)
 
 # Include directories
