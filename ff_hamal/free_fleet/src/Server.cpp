@@ -62,12 +62,6 @@ Server::SharedPtr Server::make(const ServerConfig& _config)
               participant, &FreeFleetData_DestinationRequest_desc,
               _config.dds_destination_request_topic));
 
-  dds::DDSPublishHandler<FreeFleetData_TaskRequest>::SharedPtr 
-      task_request_pub(
-          new dds::DDSPublishHandler<FreeFleetData_TaskRequest>(
-              participant, &FreeFleetData_TaskRequest_desc,
-              _config.dds_task_request_topic));
-
   if (!state_sub->is_ready() ||
       !mode_request_pub->is_ready() ||
       !path_request_pub->is_ready() ||
@@ -111,12 +105,6 @@ bool Server::send_destination_request(
     const messages::DestinationRequest& _destination_request)
 {
   return impl->send_destination_request(_destination_request);
-}
-
-bool Server::send_task_request(
-    const messages::TaskRequest& _task_request)
-{
-  return impl->send_task_request(_task_request);
 }
 
 } // namespace free_fleet

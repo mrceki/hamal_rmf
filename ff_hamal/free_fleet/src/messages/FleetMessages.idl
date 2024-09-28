@@ -62,11 +62,4 @@ module FreeFleetData
     Location destination;
     string task_id;
   };
-  struct TaskRequest
-  {
-    string fleet_name;
-    string robot_name;
-    string task_id;
-    string task_type;
-  };
 };

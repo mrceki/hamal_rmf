@@ -25,7 +25,6 @@
 #include <free_fleet/messages/ModeRequest.hpp>
 #include <free_fleet/messages/PathRequest.hpp>
 #include <free_fleet/messages/DestinationRequest.hpp>
-#include <free_fleet/messages/TaskRequest.hpp>
 
 #include "FleetMessages.h"
 
@@ -63,15 +62,6 @@ void convert(
 void convert(
     const FreeFleetData_DestinationRequest& _input,
     DestinationRequest& _output);
-
-void convert(
-    const TaskRequest& _input,
-     FreeFleetData_TaskRequest& _output);
-
-void convert(
-    const FreeFleetData_TaskRequest& _input,
-    TaskRequest& _output);
-    
 
 } // namespace 
 } // namespace free_fleet
