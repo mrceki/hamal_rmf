@@ -71,8 +71,7 @@ Server::SharedPtr Server::make(const ServerConfig& _config)
   if (!state_sub->is_ready() ||
       !mode_request_pub->is_ready() ||
       !path_request_pub->is_ready() ||
-      !destination_request_pub->is_ready() ||
-      !task_request_pub->is_ready())
+      !destination_request_pub->is_ready())
     return nullptr;
 
   server->impl->start(ServerImpl::Fields{
@@ -80,8 +79,7 @@ Server::SharedPtr Server::make(const ServerConfig& _config)
       std::move(state_sub),
       std::move(mode_request_pub),
       std::move(path_request_pub),
-      std::move(destination_request_pub),
-      std::move(task_request_pub)});
+      std::move(destination_request_pub)});
   return server;
 }
 
